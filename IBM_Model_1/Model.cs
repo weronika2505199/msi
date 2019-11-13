@@ -31,11 +31,11 @@ namespace IBM_Model_1
             polishSentences = ReadSentencesFromFile(polishFilePath);
             distinctEnglishWords = ReadDistinctWordsFromSentences(englishSentences, false);
             distinctPolishWords = ReadDistinctWordsFromSentences(polishSentences, true);
-            initialProbability = 1.0 / distinctEnglishWords.Length;
-            t = new double[distinctEnglishWords.Length, distinctPolishWords.Length];
-            for (int i = 0; i < distinctEnglishWords.Length; i++)
+            initialProbability = 1.0 / distinctPolishWords.Length;
+            t = new double[distinctPolishWords.Length, distinctEnglishWords.Length];
+            for (int i = 0; i < distinctPolishWords.Length; i++)
             {
-                for (int j = 0; j < distinctPolishWords.Length; j++)
+                for (int j = 0; j < distinctEnglishWords.Length; j++)
                 {
                     t[i, j] = initialProbability;
                 }
@@ -63,38 +63,38 @@ namespace IBM_Model_1
 
         public void Train()
         {
-            double[] s_total = new double [distinctEnglishWords.Length];
+            double[] s_total = new double [distinctPolishWords.Length];
             for (int i=0; i<iterations; i++)
             {
-                double[,] count_e_f = new double[distinctEnglishWords.Length, distinctPolishWords.Length];
-                double[] total_f = new double[distinctPolishWords.Length];
+                double[,] count_e_f = new double[distinctPolishWords.Length, distinctEnglishWords.Length];
+                double[] total_f = new double[distinctEnglishWords.Length];
 
                 for(int j=0; j<englishSentences.Length; j++)
                 {
                     string[] englishWords = englishSentences[j].Split(' ');
                     string[] polishWords = ("NULL " + polishSentences[j]).Split(' ');
 
-                    for(int k=0; k<englishWords.Length; k++)
+                    for(int k=0; k<polishWords.Length; k++)
                     {
-                        var englishIndex = Array.IndexOf(distinctEnglishWords, englishWords[k]);
-                        s_total[englishIndex] = 0;
+                        var polishIndex = Array.IndexOf(distinctPolishWords, polishWords[k]);
+                        s_total[polishIndex] = 0;
 
-                        for(int l=0; l<polishWords.Length; l++)
+                        for(int l=0; l<englishWords.Length; l++)
                         {
-                            var polishIndex = Array.IndexOf(distinctPolishWords, polishWords[l]);
-                            s_total[englishIndex] += t[englishIndex, polishIndex];
+                            var englishIndex = Array.IndexOf(distinctEnglishWords, englishWords[l]);
+                            s_total[polishIndex] += t[polishIndex, englishIndex];
                         }
                     }
 
-                    for (int k = 0; k < englishWords.Length; k++)
+                    for (int k = 0; k < polishWords.Length; k++)
                     {
-                        var englishIndex = Array.IndexOf(distinctEnglishWords, englishWords[k]);
-                        for (int l = 0; l < polishWords.Length; l++)
+                        var polishIndex = Array.IndexOf(distinctPolishWords, polishWords[k]);
+                        for (int l = 0; l < englishWords.Length; l++)
                         {
-                            var polishIndex = Array.IndexOf(distinctPolishWords, polishWords[l]);
-                            var value = t[englishIndex, polishIndex] / s_total[englishIndex];
-                            count_e_f[englishIndex, polishIndex] += value;
-                            total_f[polishIndex] += value;
+                            var englishIndex = Array.IndexOf(distinctEnglishWords, englishWords[l]);
+                            var value = t[polishIndex, englishIndex] / s_total[polishIndex];
+                            count_e_f[polishIndex, englishIndex] += value;
+                            total_f[englishIndex] += value;
                         }
                     }
                 }
@@ -103,7 +103,7 @@ namespace IBM_Model_1
                 {
                     for (int k = 0; k < distinctPolishWords.Length; k++)
                     {
-                        t[j, k] = count_e_f[j, k] / total_f[k];
+                        t[k, j] = count_e_f[k, j] / total_f[j];
                     }
                 }
             }
