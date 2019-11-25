@@ -8,7 +8,9 @@ using System.Threading.Tasks;
 namespace IBM_Model_1
 {
     public class Model
-    {
+    { 
+        Dictionary<string, string> dic = new Dictionary<string, string>();
+
         string[] distinctPolishWords;
 
         string[] distinctEnglishWords;
@@ -110,7 +112,7 @@ namespace IBM_Model_1
                 }
             }
         }
-        public string getTranslation(string source_sentence)
+        public string getStatisticTranslation(string source_sentence)
         {
             var words = source_sentence.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
             string[] translation = new string[words.Count()];
@@ -146,5 +148,28 @@ namespace IBM_Model_1
             return translationString.Substring(0, translationString.Length-1);
         }
 
+        public void getDictionary(string dictionaryFilePath)
+        {
+            string[] dicLines = File.ReadAllLines(dictionaryFilePath);
+            
+            for (int i = 0; i < dicLines.Length; i++)
+            {
+                string[] tmp = dicLines[i].Split(new char[] { ' ', '-' }, StringSplitOptions.RemoveEmptyEntries);
+                dic.Add(tmp[0], tmp[1]);
+            }
+        }
+
+        public string getBrutalTranslation(string source_sentence)
+        {
+            if (dic.Count == 0) return "";
+            var words = source_sentence.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+            string[] translation = new string[words.Count()];
+
+            for (int i = 0; i < words.Count(); i++) translation[i] = dic.ContainsKey(words[i]) ? dic[words[i]] : "";
+
+            string translationString = "";
+            for (int i = 0; i < translation.Count(); i++) translationString += translation[i] + " ";
+            return translationString.Substring(0, translationString.Length - 1);
+        }
     }
 }

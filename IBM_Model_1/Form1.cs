@@ -61,8 +61,20 @@ namespace IBM_Model_1
 
         private void button2_Click(object sender, EventArgs e)
         {
-            richTextBox2.Text = model.getTranslation(richTextBox1.Text);
+            richTextBox2.Text = model.getStatisticTranslation(richTextBox1.Text);
+            richTextBox2.Text += "\n" + model.getBrutalTranslation(richTextBox1.Text);
             Refresh();
+        }
+
+        private void textBox3_Click(object sender, EventArgs e)
+        {
+            OpenFileDialog openFileDialog = new OpenFileDialog();
+            var result = openFileDialog.ShowDialog();
+            if (result == DialogResult.OK)
+            {
+                textBox3.Text = openFileDialog.FileName;
+                model.getDictionary(textBox3.Text);
+            }
         }
     }
 }
