@@ -1,5 +1,4 @@
-﻿dom
-kwiat
-niebieski dom
-niebieski kwiat
-niebieskie jabłko
+﻿Dom jest niebieski
+kwiatek jest w domu
+brak domu w mieście
+niebieskie miasto jest tu

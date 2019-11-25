@@ -12,9 +12,12 @@ namespace IBM_Model_1
 {
     public partial class Form1 : Form
     {
+        Model model;
         public Form1()
         {
             InitializeComponent();
+            richTextBox1.Enabled = false;
+            richTextBox2.Enabled = false;
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -29,8 +32,11 @@ namespace IBM_Model_1
                 MessageBox.Show("Fill in english file path");
                 return;
             }
-            var model = new Model(textBox1.Text, textBox2.Text, (int)numericUpDown1.Value);
+            model = new Model(textBox1.Text, textBox2.Text, (int)numericUpDown1.Value);
             model.Train();
+            richTextBox1.Enabled = true;
+            richTextBox2.Enabled = true;
+            richTextBox2.ReadOnly = true;
         }
 
         private void textBox2_Click(object sender, EventArgs e)
@@ -51,6 +57,12 @@ namespace IBM_Model_1
             {
                 textBox1.Text = openFileDialog.FileName;
             }
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            richTextBox2.Text = model.getTranslation(richTextBox1.Text);
+            Refresh();
         }
     }
 }

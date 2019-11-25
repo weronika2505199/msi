@@ -33,13 +33,7 @@ namespace IBM_Model_1
             distinctPolishWords = ReadDistinctWordsFromSentences(polishSentences, true);
             initialProbability = 1.0 / distinctPolishWords.Length;
             t = new double[distinctPolishWords.Length, distinctEnglishWords.Length];
-            for (int i = 0; i < distinctPolishWords.Length; i++)
-            {
-                for (int j = 0; j < distinctEnglishWords.Length; j++)
-                {
-                    t[i, j] = initialProbability;
-                }
-            }
+            
         }
 
         private string[] ReadDistinctWordsFromSentences(string[] sentences, bool isPolish)
@@ -63,6 +57,14 @@ namespace IBM_Model_1
 
         public void Train()
         {
+            for (int i = 0; i < distinctPolishWords.Length; i++)
+            {
+                for (int j = 0; j < distinctEnglishWords.Length; j++)
+                {
+                    t[i, j] = initialProbability;
+                }
+            }
+
             double[] s_total = new double [distinctPolishWords.Length];
             for (int i=0; i<iterations; i++)
             {
@@ -108,5 +110,41 @@ namespace IBM_Model_1
                 }
             }
         }
+        public string getTranslation(string source_sentence)
+        {
+            var words = source_sentence.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+            string[] translation = new string[words.Count()];
+
+            for (int i = 0; i < words.Count(); i++)
+            {
+                int e = -1;
+                for (int j = 0; j < distinctEnglishWords.Count(); j++)
+                {
+                    if (distinctEnglishWords[j] == words[i])
+                    {
+                        e = j;
+                        break;
+                    }
+                }
+                if (e == -1) continue;
+
+                int f = 0;
+                double max = 0;
+                for (int j = 0; j < distinctPolishWords.Count(); j++)
+                {
+                    if (t[j, e] > max)
+                    {
+                        max = t[j, e];
+                        f = j;
+                    }    
+                }
+                translation[i] = distinctPolishWords[f];
+            }
+
+            string translationString = "";
+            for (int i = 0; i < translation.Count(); i++) translationString += translation[i] + " ";
+            return translationString.Substring(0, translationString.Length-1);
+        }
+
     }
 }

@@ -1,5 +1,4 @@
-﻿the house
-the flower
-the blue house
-the blue flower
-blue apple
+﻿the house is blue
+the flower is in the house
+no house in the city
+the blue city is here
