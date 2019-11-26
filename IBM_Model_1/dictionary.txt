@@ -1,0 +1,8 @@
+house - dom
+is - jest
+blue - niebieski
+flower - kwiat
+in - w
+no - brak
+city - miasto
+here - tutaj

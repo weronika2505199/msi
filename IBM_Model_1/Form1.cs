@@ -37,6 +37,7 @@ namespace IBM_Model_1
             richTextBox1.Enabled = true;
             richTextBox2.Enabled = true;
             richTextBox2.ReadOnly = true;
+            textBox3.Enabled = true;
         }
 
         private void textBox2_Click(object sender, EventArgs e)

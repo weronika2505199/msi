@@ -195,6 +195,7 @@
             // 
             // textBox3
             // 
+            this.textBox3.Enabled = false;
             this.textBox3.Location = new System.Drawing.Point(467, 128);
             this.textBox3.Name = "textBox3";
             this.textBox3.ReadOnly = true;
